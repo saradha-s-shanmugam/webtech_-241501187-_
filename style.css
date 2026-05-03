@@ -1,0 +1,214 @@
+/* ============ GLOBAL ============ */
+*{box-sizing:border-box}
+body{
+  font-family:'Segoe UI',Tahoma,sans-serif;
+  margin:0;
+  min-height:100vh;
+  color:#1a1a2e;
+  background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#1a1a2e);
+  background-size:400% 400%;
+  animation:liveBg 18s ease infinite;
+}
+@keyframes liveBg{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+/* page-specific live backgrounds (all animated gradients) */
+.login-bg{background:linear-gradient(-45deg,#667eea,#764ba2,#f093fb,#4facfe);background-size:400% 400%;animation:liveBg 15s ease infinite}
+.index-bg{background:linear-gradient(-45deg,#0f2027,#203a43,#2c5364,#11998e);background-size:400% 400%;animation:liveBg 18s ease infinite;color:#fff}
+.jobs-bg{background:linear-gradient(-45deg,#1e3c72,#2a5298,#6a11cb,#2575fc);background-size:400% 400%;animation:liveBg 20s ease infinite;color:#fff}
+.apply-bg{background:linear-gradient(-45deg,#16222a,#3a6073,#16222a,#3a6073);background-size:400% 400%;animation:liveBg 18s ease infinite}
+.success-bg{background:linear-gradient(-45deg,#11998e,#38ef7d,#11998e,#0f9b8e);background-size:400% 400%;animation:liveBg 14s ease infinite}
+
+/* ============ NAVBAR ============ */
+.navbar-custom{
+  background:rgba(15,15,30,.85)!important;
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+.navbar-custom .brand{
+  font-weight:700;font-size:1.4rem;color:#fff;text-decoration:none;
+  background:linear-gradient(90deg,#f093fb,#4facfe);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.navbar-custom a{color:#fff;text-decoration:none;margin-left:1rem;font-weight:500;transition:.2s}
+.navbar-custom a:hover{color:#4facfe}
+
+/* ============ LOGIN ============ */
+.login-container{min-height:calc(100vh - 70px);display:flex;justify-content:center;align-items:center;padding:20px}
+.login-box{
+  background:rgba(255,255,255,.95);
+  padding:40px 35px;border-radius:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+  width:100%;max-width:420px;
+  animation:popIn .5s ease;
+}
+@keyframes popIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.login-box h2{
+  background:linear-gradient(90deg,#667eea,#764ba2);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  font-weight:700;
+}
+.error-msg{color:#dc3545;font-size:.85rem;margin-top:-10px;margin-bottom:10px;display:none}
+.error-msg.show{display:block;animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.link-row{display:flex;justify-content:space-between;align-items:center;margin:10px 0 15px;font-size:.9rem}
+.link-row a{color:#667eea;text-decoration:none}
+.link-row a:hover{text-decoration:underline}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding:60px 20px;
+  background:linear-gradient(135deg,rgba(102,126,234,.4),rgba(118,75,162,.4));
+  position:relative;overflow:hidden;
+}
+.hero h1{
+  font-size:clamp(2rem,5vw,4rem);font-weight:800;margin-bottom:20px;
+  background:linear-gradient(90deg,#f093fb,#4facfe,#43e97b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{font-size:1.2rem;max-width:600px;margin-bottom:30px;color:#e0e0e0}
+.hero .btn-hero{
+  background:linear-gradient(90deg,#f093fb,#4facfe);
+  border:none;color:#fff;font-weight:600;padding:14px 40px;border-radius:50px;
+  font-size:1.1rem;box-shadow:0 10px 30px rgba(79,172,254,.4);
+  transition:transform .2s;
+}
+.hero .btn-hero:hover{transform:translateY(-3px);color:#fff}
+
+/* ============ CATEGORIES ============ */
+.section{padding:60px 20px}
+.section h2{text-align:center;font-weight:700;margin-bottom:40px;color:#fff}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:20px;max-width:1100px;margin:0 auto}
+.cat-card{
+  background:rgba(255,255,255,.08);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.15);border-radius:16px;
+  padding:30px 15px;text-align:center;color:#fff;transition:.3s;cursor:pointer;
+}
+.cat-card:hover{transform:translateY(-8px);background:rgba(255,255,255,.15);box-shadow:0 15px 40px rgba(0,0,0,.3)}
+.cat-card .icon{font-size:3rem;margin-bottom:10px;display:block}
+.cat-card h5{font-weight:600;margin:0}
+
+/* ============ STATS ============ */
+.stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;
+  max-width:1000px;margin:0 auto;padding:40px 20px;
+}
+.stat-box{
+  background:linear-gradient(135deg,rgba(240,147,251,.2),rgba(79,172,254,.2));
+  border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:30px;text-align:center;color:#fff;
+}
+.stat-box .num{font-size:2.5rem;font-weight:800;background:linear-gradient(90deg,#f093fb,#4facfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-box .label{font-size:1rem;color:#e0e0e0;margin-top:5px}
+
+/* ============ FOOTER ============ */
+.footer{
+  background:rgba(15,15,30,.95);color:#fff;padding:40px 20px 20px;text-align:center;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.footer .socials{margin:15px 0}
+.footer .socials a{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(255,255,255,.1);color:#fff;margin:0 6px;text-decoration:none;
+  transition:.3s;font-size:1.1rem;
+}
+.footer .socials a:hover{background:linear-gradient(135deg,#f093fb,#4facfe);transform:translateY(-3px)}
+.footer .copy{color:#888;font-size:.9rem;margin-top:15px}
+
+/* ============ JOBS ============ */
+.filter-bar{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-bottom:25px;
+}
+.filter-bar select,.filter-bar input{
+  border-radius:50px;border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.95);color:#1a1a2e;padding:10px 18px;font-size:.95rem;
+  min-width:200px;
+}
+.job-card{
+  background:rgba(255,255,255,.95);border:none;border-radius:16px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.2);transition:.3s;height:100%;
+}
+.job-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.job-img-wrap{
+  height:160px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#667eea,#764ba2);position:relative;
+}
+.job-img-wrap .job-icon{font-size:4rem;color:#fff}
+.job-card-body{padding:20px}
+.job-card-body h5{font-weight:700;margin-bottom:8px;color:#1a1a2e}
+.job-meta{font-size:.85rem;color:#666;margin-bottom:5px}
+.job-meta i{color:#667eea;width:18px}
+.badge-cat{
+  display:inline-block;padding:4px 12px;border-radius:50px;font-size:.75rem;font-weight:600;
+  background:linear-gradient(90deg,#f093fb,#4facfe);color:#fff;margin-bottom:10px;
+}
+.btn-apply{
+  background:linear-gradient(90deg,#667eea,#764ba2);border:none;color:#fff;
+  width:100%;padding:10px;border-radius:50px;font-weight:600;margin-top:10px;transition:.2s;
+}
+.btn-apply:hover{transform:translateY(-2px);color:#fff;box-shadow:0 8px 20px rgba(102,126,234,.4)}
+
+/* spinner */
+.spinner-wrap{display:flex;justify-content:center;align-items:center;padding:60px 0}
+.spinner{
+  width:60px;height:60px;border:5px solid rgba(255,255,255,.2);
+  border-top-color:#4facfe;border-radius:50%;animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ============ APPLY ============ */
+.apply-form{
+  background:rgba(255,255,255,.97);border-radius:16px;padding:35px;max-width:650px;
+  margin:40px auto;box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+.apply-form h2{font-weight:700;margin-bottom:8px;background:linear-gradient(90deg,#667eea,#f093fb);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.apply-form .job-tag{
+  display:inline-block;background:linear-gradient(90deg,#4facfe,#43e97b);color:#fff;
+  padding:6px 16px;border-radius:50px;font-size:.9rem;margin-bottom:20px;
+}
+.apply-form label{font-weight:600;color:#333;margin-bottom:5px;display:block}
+.apply-form .form-control,.apply-form textarea{border-radius:10px;border:1px solid #ddd;padding:10px 14px;margin-bottom:5px}
+.apply-form .form-control:focus{border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.15);outline:none}
+.btn-submit{
+  background:linear-gradient(90deg,#11998e,#38ef7d);border:none;color:#fff;
+  width:100%;padding:13px;border-radius:50px;font-weight:700;font-size:1.05rem;margin-top:10px;
+}
+.btn-submit:hover{color:#fff;transform:translateY(-2px);box-shadow:0 10px 25px rgba(17,153,142,.4)}
+.file-preview{font-size:.85rem;color:#11998e;margin-top:5px;font-weight:600}
+
+/* ============ SUCCESS ============ */
+.success-box{
+  background:rgba(255,255,255,.97);border-radius:20px;padding:50px 35px;
+  max-width:550px;margin:60px auto;text-align:center;
+  box-shadow:0 25px 70px rgba(0,0,0,.3);animation:popIn .6s ease;
+}
+.success-box .check{
+  width:90px;height:90px;border-radius:50%;
+  background:linear-gradient(135deg,#11998e,#38ef7d);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 20px;
+  color:#fff;font-size:3rem;box-shadow:0 10px 30px rgba(17,153,142,.4);
+}
+.success-box h1{font-weight:700;color:#1a1a2e}
+.ref-num{
+  display:inline-block;background:#f0f4ff;color:#667eea;padding:8px 20px;
+  border-radius:50px;font-weight:700;letter-spacing:1px;margin:15px 0;
+}
+.success-box .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.btn-grad{
+  background:linear-gradient(90deg,#667eea,#764ba2);border:none;color:#fff;
+  padding:11px 28px;border-radius:50px;font-weight:600;text-decoration:none;display:inline-block;
+}
+.btn-grad:hover{color:#fff;transform:translateY(-2px);box-shadow:0 10px 25px rgba(102,126,234,.4)}
+.btn-grad.alt{background:linear-gradient(90deg,#f093fb,#f5576c)}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:576px){
+  .login-box,.apply-form,.success-box{padding:25px 20px}
+  .hero{min-height:60vh;padding:40px 15px}
+  .navbar-custom a{margin-left:.6rem;font-size:.9rem}
+  .filter-bar select,.filter-bar input{min-width:100%}
+}

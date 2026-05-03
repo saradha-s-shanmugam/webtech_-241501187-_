@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Available Jobs - JobPortal</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="jobs-bg">
+
+<nav class="navbar navbar-custom px-3">
+  <div class="container">
+    <a class="brand" href="home.html"><i class="fa-solid fa-briefcase"></i> JobPortal</a>
+    <div>
+      <a href="home.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4 mb-5">
+  <h2 class="text-center mb-4" style="font-weight:700">Available Jobs</h2>
+
+  <div class="filter-bar">
+    <input type="text" id="search" onkeyup="render()" placeholder="🔍 Search jobs...">
+    <select id="catFilter" onchange="render()">
+      <option value="">All Categories</option>
+      <option>Tech</option>
+      <option>Design</option>
+      <option>Data</option>
+      <option>Cloud</option>
+      <option>Security</option>
+      <option>Mobile</option>
+      <option>QA</option>
+      <option>IT</option>
+    </select>
+    <select id="sortBy" onchange="render()">
+      <option value="newest">Sort: Newest</option>
+      <option value="az">Sort: A → Z</option>
+      <option value="za">Sort: Z → A</option>
+    </select>
+  </div>
+
+  <div id="spinner" class="spinner-wrap"><div class="spinner"></div></div>
+  <div class="row g-4" id="jobContainer" style="display:none"></div>
+  <p id="noResults" class="text-center text-white mt-4" style="display:none">No jobs match your filters.</p>
+</div>
+
+<script src="js/script.js"></script>
+<script>
+requireLogin();
+
+const jobs=[
+  {t:"Software Developer",cat:"Tech",icon:"fa-code",salary:"₹6-12 LPA",loc:"Bangalore",exp:"2-5 yrs",color:"#4facfe,#00f2fe"},
+  {t:"Frontend Developer",cat:"Tech",icon:"fa-laptop-code",salary:"₹5-10 LPA",loc:"Remote",exp:"1-4 yrs",color:"#667eea,#764ba2"},
+  {t:"Backend Developer",cat:"Tech",icon:"fa-server",salary:"₹7-14 LPA",loc:"Pune",exp:"2-6 yrs",color:"#11998e,#38ef7d"},
+  {t:"UI Designer",cat:"Design",icon:"fa-pen-ruler",salary:"₹4-9 LPA",loc:"Mumbai",exp:"1-3 yrs",color:"#f093fb,#f5576c"},
+  {t:"UX Designer",cat:"Design",icon:"fa-palette",salary:"₹5-11 LPA",loc:"Hyderabad",exp:"2-5 yrs",color:"#fa709a,#fee140"},
+  {t:"Data Analyst",cat:"Data",icon:"fa-chart-column",salary:"₹5-10 LPA",loc:"Delhi",exp:"1-4 yrs",color:"#30cfd0,#330867"},
+  {t:"AI Engineer",cat:"Data",icon:"fa-brain",salary:"₹10-20 LPA",loc:"Bangalore",exp:"3-7 yrs",color:"#a18cd1,#fbc2eb"},
+  {t:"Machine Learning Engineer",cat:"Data",icon:"fa-robot",salary:"₹9-18 LPA",loc:"Remote",exp:"2-6 yrs",color:"#ff9a9e,#fad0c4"},
+  {t:"Cloud Engineer",cat:"Cloud",icon:"fa-cloud",salary:"₹8-15 LPA",loc:"Chennai",exp:"2-5 yrs",color:"#5ee7df,#b490ca"},
+  {t:"Cyber Security Analyst",cat:"Security",icon:"fa-shield-halved",salary:"₹7-14 LPA",loc:"Gurgaon",exp:"2-5 yrs",color:"#ff6e7f,#bfe9ff"},
+  {t:"DevOps Engineer",cat:"Cloud",icon:"fa-gears",salary:"₹9-16 LPA",loc:"Bangalore",exp:"3-6 yrs",color:"#43cea2,#185a9d"},
+  {t:"Mobile App Developer",cat:"Mobile",icon:"fa-mobile-screen",salary:"₹6-12 LPA",loc:"Pune",exp:"2-5 yrs",color:"#ffd86f,#fc6262"},
+  {t:"Game Developer",cat:"Tech",icon:"fa-gamepad",salary:"₹6-13 LPA",loc:"Hyderabad",exp:"2-5 yrs",color:"#7f00ff,#e100ff"},
+  {t:"Full Stack Developer",cat:"Tech",icon:"fa-layer-group",salary:"₹8-15 LPA",loc:"Remote",exp:"3-6 yrs",color:"#f7971e,#ffd200"},
+  {t:"Blockchain Developer",cat:"Tech",icon:"fa-link",salary:"₹10-22 LPA",loc:"Bangalore",exp:"2-5 yrs",color:"#1f4037,#99f2c8"},
+  {t:"Database Administrator",cat:"IT",icon:"fa-database",salary:"₹6-12 LPA",loc:"Mumbai",exp:"3-7 yrs",color:"#642b73,#c6426e"},
+  {t:"Network Engineer",cat:"IT",icon:"fa-network-wired",salary:"₹5-11 LPA",loc:"Chennai",exp:"2-5 yrs",color:"#16a085,#f4d03f"},
+  {t:"QA Tester",cat:"QA",icon:"fa-bug",salary:"₹4-9 LPA",loc:"Pune",exp:"1-4 yrs",color:"#ee0979,#ff6a00"},
+  {t:"IT Support Engineer",cat:"IT",icon:"fa-headset",salary:"₹3-7 LPA",loc:"Delhi",exp:"0-3 yrs",color:"#36d1dc,#5b86e5"},
+  {t:"System Administrator",cat:"IT",icon:"fa-user-gear",salary:"₹5-10 LPA",loc:"Bangalore",exp:"2-5 yrs",color:"#614385,#516395"}
+];
+
+// preselect category from URL
+const urlCat=new URLSearchParams(location.search).get('cat');
+if(urlCat){setTimeout(()=>{const sel=document.getElementById('catFilter');[...sel.options].forEach(o=>{if(o.value===urlCat)sel.value=urlCat});render();},0)}
+
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  const cat=document.getElementById('catFilter').value;
+  const sort=document.getElementById('sortBy').value;
+  let list=jobs.filter(j=>j.t.toLowerCase().includes(q) && (!cat||j.cat===cat));
+  if(sort==='az')list.sort((a,b)=>a.t.localeCompare(b.t));
+  if(sort==='za')list.sort((a,b)=>b.t.localeCompare(a.t));
+  if(sort==='newest')list=[...list].reverse();
+
+  const c=document.getElementById('jobContainer');
+  c.innerHTML=list.map(j=>`
+    <div class="col-md-6 col-lg-4">
+      <div class="card job-card">
+        <div class="job-img-wrap" style="background:linear-gradient(135deg,${j.color})">
+          <i class="fa-solid ${j.icon} job-icon"></i>
+        </div>
+        <div class="job-card-body">
+          <span class="badge-cat">${j.cat}</span>
+          <h5>${j.t}</h5>
+          <div class="job-meta"><i class="fa-solid fa-indian-rupee-sign"></i> ${j.salary}</div>
+          <div class="job-meta"><i class="fa-solid fa-location-dot"></i> ${j.loc}</div>
+          <div class="job-meta"><i class="fa-solid fa-briefcase"></i> ${j.exp}</div>
+          <a href="apply.html?job=${encodeURIComponent(j.t)}" class="btn btn-apply">Apply Now</a>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('noResults').style.display=list.length?'none':'block';
+}
+
+// loading spinner before rendering
+setTimeout(()=>{
+  document.getElementById('spinner').style.display='none';
+  document.getElementById('jobContainer').style.display='flex';
+  render();
+},900);
+</script>
+</body>
+</html>

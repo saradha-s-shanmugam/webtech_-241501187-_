@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Apply for Job - JobPortal</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="apply-bg">
+
+<nav class="navbar navbar-custom px-3">
+  <div class="container">
+    <a class="brand" href="home.html"><i class="fa-solid fa-briefcase"></i> JobPortal</a>
+    <div>
+      <a href="home.html">Home</a>
+      <a href="jobs.html">Jobs</a>
+      <a href="#" onclick="logout()">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="apply-form">
+    <h2>Job Application</h2>
+    <span class="job-tag" id="jobTag"><i class="fa-solid fa-briefcase me-1"></i> <span id="jobTitle">Position</span></span>
+
+    <form id="applyForm" novalidate>
+      <label>Applicant Name *</label>
+      <input class="form-control" id="name">
+      <div class="error-msg" id="errName">Name is required</div>
+
+      <label class="mt-2">Email *</label>
+      <input type="email" class="form-control" id="email">
+      <div class="error-msg" id="errEmail">Enter a valid email</div>
+
+      <label class="mt-2">Contact Number *</label>
+      <input class="form-control" id="phone">
+      <div class="error-msg" id="errPhone">Enter a valid 10-digit number</div>
+
+      <label class="mt-2">Job Role *</label>
+      <input class="form-control" id="role">
+      <div class="error-msg" id="errRole">Job role is required</div>
+
+      <label class="mt-2">Experience (years) *</label>
+      <select class="form-control" id="exp">
+        <option value="">Select experience</option>
+        <option>Fresher</option><option>0-1 years</option><option>1-3 years</option>
+        <option>3-5 years</option><option>5-10 years</option><option>10+ years</option>
+      </select>
+      <div class="error-msg" id="errExp">Please select experience</div>
+
+      <label class="mt-2">LinkedIn Profile</label>
+      <input class="form-control" id="linkedin" placeholder="https://linkedin.com/in/...">
+      <div class="error-msg" id="errLi">Enter a valid URL</div>
+
+      <label class="mt-2">Cover Letter *</label>
+      <textarea class="form-control" id="cover" rows="4" placeholder="Tell us why you're a good fit..."></textarea>
+      <div class="error-msg" id="errCover">Please write at least 20 characters</div>
+
+      <label class="mt-2">Upload Resume *</label>
+      <input type="file" class="form-control" id="resume" accept=".pdf,.doc,.docx">
+      <div class="file-preview" id="filePreview"></div>
+      <div class="error-msg" id="errResume">Please upload your resume</div>
+
+      <button type="submit" class="btn btn-submit mt-3"><i class="fa-solid fa-paper-plane me-2"></i>Submit Application</button>
+    </form>
+  </div>
+</div>
+
+<script src="js/script.js"></script>
+<script>
+requireLogin();
+
+const job=new URLSearchParams(location.search).get('job')||'General Application';
+document.getElementById('jobTitle').textContent=job;
+document.getElementById('role').value=job;
+
+document.getElementById('resume').addEventListener('change',function(){
+  const f=this.files[0];
+  document.getElementById('filePreview').textContent=f?('📎 '+f.name+' ('+(f.size/1024).toFixed(1)+' KB)'):'';
+});
+
+function showErr(id,show){document.getElementById(id).classList.toggle('show',show)}
+
+document.getElementById('applyForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const name=document.getElementById('name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const role=document.getElementById('role').value.trim();
+  const exp=document.getElementById('exp').value;
+  const li=document.getElementById('linkedin').value.trim();
+  const cover=document.getElementById('cover').value.trim();
+  const resume=document.getElementById('resume').files[0];
+
+  const emOk=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const phOk=/^\d{10}$/.test(phone.replace(/\D/g,''));
+  const liOk=!li || /^https?:\/\/.+\..+/.test(li);
+
+  showErr('errName',!name);
+  showErr('errEmail',!emOk);
+  showErr('errPhone',!phOk);
+  showErr('errRole',!role);
+  showErr('errExp',!exp);
+  showErr('errLi',!liOk);
+  showErr('errCover',cover.length<20);
+  showErr('errResume',!resume);
+
+  if(!name||!emOk||!phOk||!role||!exp||!liOk||cover.length<20||!resume)return;
+
+  const ref='JP-'+Date.now().toString().slice(-6);
+  localStorage.setItem('jp_lastApp',JSON.stringify({name,job:role,ref}));
+  window.location.href='success.html';
+});
+</script>
+</body>
+</html>
